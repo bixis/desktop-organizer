@@ -8,19 +8,20 @@
 <body>
     <form>
         <div>
-            <label for="">Enter Item</label>
+            <label>Enter Item</label>
             <input type="text" id="item" autofocus>
         </div>
         <button type="submit">Add item</button>
     </form>
 
     <script>
-        const form = document.querySelector('form');
-        form.addEventListener('submit', submitForm)
+        document.querySelector('form').addEventListener('submit', submitForm);
 
         function submitForm(e) {
             e.preventDefault();
-            console.log(123);
+            const item = document.querySelector('#item').value;
+            console.log("Form submitted with item:", item); // for debugging
+            window.electron.ipcRenderer.send('item:add', item);
         }
     </script>
 </body>

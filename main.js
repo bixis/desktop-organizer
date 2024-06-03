@@ -1,17 +1,26 @@
 const electron = require("electron");
-const url = require("url");
 const path = require("path");
+const url = require("url");
 
-const {app, BrowserWindow, Menu} = electron;
+const {app, BrowserWindow, Menu, ipcMain} = electron;
 
 let mainWindow;
 let addWindow;
 
-//Listen for app to be ready
+// ONLY FOR DEVELOPMENT MUST DELETE FOR PROD:
+process.env['ELECTRON_DISABLE_SECURITY_WARNINGS'] = 'true';
+// MUST DELETE LINE ABOVE FOR PROD.
 
+
+
+//Listen for app to be ready
 app.on('ready', function(){
 	// Create new window
-	mainWindow = new BrowserWindow();
+	mainWindow = new BrowserWindow({
+		webPreferences: {
+			preload: path.join(__dirname, 'preload.js')
+		}
+	});
 	// Load html
 	mainWindow.loadURL(url.format({
 		pathname: path.join(__dirname, "mainWindow.html"),
@@ -34,7 +43,10 @@ function createAddWindow(){
 	addWindow = new BrowserWindow({
 		width:300,
 		height:200,
-		title:'Add Shopping List Item'
+		title:'Add Shopping List Item',
+		webPreferences: {
+            preload: path.join(__dirname, 'preload.js')
+        }
 	});
 	// Load html
 	addWindow.loadURL(url.format({
@@ -45,8 +57,19 @@ function createAddWindow(){
 	// Garbage collection handling for this window
 	addWindow.on('closed', function(){
 		addWindow = null;
-	})
+	});
+	addWindow.webContents.openDevTools();
 }
+
+ipcMain.on('item:add', function (e, item) {
+    console.log(item);
+    mainWindow.webContents.send('item:add', item);
+    addWindow.close();
+});
+
+ipcMain.on("msg", (event, data) => {
+    console.log(data);
+});
 
 // Create menu template
 const mainMenuTemplate = [
@@ -69,8 +92,7 @@ const mainMenuTemplate = [
 				click(){
 					app.quit();
 				}
-			},
-		
+			}
 		]
 	}
 ];
@@ -78,7 +100,7 @@ const mainMenuTemplate = [
 // Have the menu show as "File" insted of "Electron" on MACOS
 if (process.platform == "darwin"){
 	//unshift adds this empty object to the first item of the mainMenuTemplate array.
-	mainMenuTemplate.unshift({role: 'fill'})  // role fill avoids an error but must check if there's an actual role for this purposse
+	mainMenuTemplate.unshift({ role: 'fileMenu' });  // role fill avoids an error but must check if there's an actual role for this purposse
 }
 
 // Add devTools if not in production 
@@ -87,14 +109,14 @@ if (process.env.NODE_ENV !== "production"){
 		label: "Developer Tools",
 		submenu:[
 			{
+				role: "reload"
+			},
+			{
 				label: "Toggle DevTools",
-				accelerator: process.platform == 'darwin' ? 'Command+I':'Ctrl+I',
+				accelerator:process.platform == 'darwin' ? 'Command+I':'Ctrl+I',
 				click(item, focusedWindow){
 					focusedWindow.toggleDevTools();
 				}
-			},
-			{
-				role: "reload"
 			}
 		]
 	});
@@ -105,3 +127,4 @@ app.on('window-all-closed', () => {                // quitting the app when no w
         app.quit()
     }
 })
+
