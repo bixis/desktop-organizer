@@ -18,6 +18,10 @@ app.on('ready', function(){
 		protocol: 'file:',
 		slashes: true	
 	}));
+	// Quit everyting when closing main window
+	mainWindow.on('closed', function(){
+		app.quit();
+	})
 	// Building menu
 	const mainMenu = Menu.buildFromTemplate(mainMenuTemplate)
 	Menu.setApplicationMenu(mainMenu)
@@ -28,8 +32,8 @@ app.on('ready', function(){
 function createAddWindow(){
 	// Create new window
 	addWindow = new BrowserWindow({
-		width:200,
-		height:300,
+		width:300,
+		height:200,
 		title:'Add Shopping List Item'
 	});
 	// Load html
@@ -38,6 +42,10 @@ function createAddWindow(){
 		protocol: 'file:',
 		slashes: true	
 	}));
+	// Garbage collection handling for this window
+	addWindow.on('closed', function(){
+		addWindow = null;
+	})
 }
 
 // Create menu template
@@ -66,5 +74,3 @@ const mainMenuTemplate = [
 		]
 	}
 ]
-
-
