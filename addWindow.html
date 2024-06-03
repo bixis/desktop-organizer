@@ -6,7 +6,7 @@
 </head>
 
 <body>
-    <form action="">
+    <form>
         <div>
             <label for="">Enter Item</label>
             <input type="text" id="item" autofocus>
@@ -14,6 +14,15 @@
         <button type="submit">Add item</button>
     </form>
 
+    <script>
+        const form = document.querySelector('form');
+        form.addEventListener('submit', submitForm)
+
+        function submitForm(e) {
+            e.preventDefault();
+            console.log(123);
+        }
+    </script>
 </body>
 
 </html>
