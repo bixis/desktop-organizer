@@ -1,0 +1,15 @@
+{
+  "name": "desktop-organizer",
+  "version": "1.0.0",
+  "description": "multiplatform desktop organizer",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Julian Linares",
+  "license": "MIT",
+  "dependencies": {
+    "electron": "^30.0.9"
+  }
+}
