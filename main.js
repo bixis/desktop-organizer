@@ -73,4 +73,35 @@ const mainMenuTemplate = [
 		
 		]
 	}
-]
+];
+
+// Have the menu show as "File" insted of "Electron" on MACOS
+if (process.platform == "darwin"){
+	//unshift adds this empty object to the first item of the mainMenuTemplate array.
+	mainMenuTemplate.unshift({role: 'fill'})  // role fill avoids an error but must check if there's an actual role for this purposse
+}
+
+// Add devTools if not in production 
+if (process.env.NODE_ENV !== "production"){
+	mainMenuTemplate.push({
+		label: "Developer Tools",
+		submenu:[
+			{
+				label: "Toggle DevTools",
+				accelerator: process.platform == 'darwin' ? 'Command+I':'Ctrl+I',
+				click(item, focusedWindow){
+					focusedWindow.toggleDevTools();
+				}
+			},
+			{
+				role: "reload"
+			}
+		]
+	});
+}
+
+app.on('window-all-closed', () => {                // quitting the app when no windows are open on non-macOS platforms
+    if (process.platform !== 'darwin') {
+        app.quit()
+    }
+})
