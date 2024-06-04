@@ -8,7 +8,19 @@
 </head>
 
 <body>
-    <h1 style="text-align: center;">to-do list</h1>
+    <h1 style="text-align: center;">To Do App</h1>
+    <ul id="todo-list"></ul>
+
+    <script>
+        window.electron.ipcRenderer.on('update-todo-list', (event, todo) => {
+            const todoList = document.getElementById('todo-list');
+            if (todoList) {
+                const listItem = document.createElement('li');
+                listItem.textContent = todo;
+                todoList.appendChild(listItem);
+            }
+        });
+    </script>
 </body>
 
 </html>
