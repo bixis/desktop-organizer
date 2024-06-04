@@ -62,7 +62,7 @@ function createAddWindow(){
 }
 
 ipcMain.on('item:add', function (e, item) {
-    console.log(item);
+    console.log(item, "From main.js");
     mainWindow.webContents.send('item:add', item);
     addWindow.close();
 });

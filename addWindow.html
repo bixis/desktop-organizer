@@ -20,7 +20,7 @@
         function submitForm(e) {
             e.preventDefault();
             const item = document.querySelector('#item').value;
-            console.log("Form submitted with item:", item); // for debugging
+            console.log("Form submitted with item:", item); // not working 
             window.electron.ipcRenderer.send('item:add', item);
         }
     </script>
