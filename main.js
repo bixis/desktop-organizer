@@ -5,6 +5,10 @@ const url = require('url');
 let mainWindow;
 let addWindow;
 
+// ONLY FOR DEVELOPMENT MUST DELETE FOR PROD:
+process.env['ELECTRON_DISABLE_SECURITY_WARNINGS'] = 'true';
+// MUST DELETE LINE ABOVE FOR PROD.
+
 // Listen for app to be ready
 app.on('ready', function () {
   // Create main window
@@ -106,4 +110,10 @@ if (process.env.NODE_ENV !== "production") {
       }
     ]
   });
-};
+}
+
+app.on('window-all-closed', () => { // quitting the app when no windows are open on non-macOS platforms
+  if (process.platform !== 'darwin') {
+    app.quit();
+  }
+});

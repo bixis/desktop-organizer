@@ -17,6 +17,7 @@
             event.preventDefault();
             const todoInput = document.getElementById('todo-input');
             const todo = todoInput.value;
+            console.log('Sending todo:', todo); // Debug log
             if (todo) {
                 window.api.send('add-todo', todo);
                 todoInput.value = '';
