@@ -1,86 +1,60 @@
 const { app, BrowserWindow, Menu, ipcMain } = require('electron');
 const path = require('path');
-const url = require('url');
 
 let mainWindow;
 let addWindow;
 
-// ONLY FOR DEVELOPMENT MUST DELETE FOR PROD:
-process.env['ELECTRON_DISABLE_SECURITY_WARNINGS'] = 'true';
-// MUST DELETE LINE ABOVE FOR PROD.
-
-// Listen for app to be ready
-app.on('ready', function () {
-  // Create main window
+app.on('ready', () => {
   mainWindow = new BrowserWindow({
     webPreferences: {
       preload: path.join(__dirname, 'preload.js')
     }
   });
 
-  // Load main window HTML
-  mainWindow.loadURL(url.format({
-    pathname: path.join(__dirname, "mainWindow.html"),
-    protocol: 'file:',
-    slashes: true
-  }));
+  mainWindow.loadFile('mainWindow.html');
 
-  // Quit app when main window is closed
-  mainWindow.on('closed', function () {
+  mainWindow.on('closed', () => {
     app.quit();
   });
 
-  // Build menu
   const mainMenu = Menu.buildFromTemplate(mainMenuTemplate);
   Menu.setApplicationMenu(mainMenu);
 });
 
-// Create add window
 function createAddWindow() {
   addWindow = new BrowserWindow({
     width: 300,
     height: 200,
-    title: 'Add Shopping List Item',
+    title: 'Add Item',
     webPreferences: {
       preload: path.join(__dirname, 'preload.js')
     }
   });
 
-  // Load add window HTML
-  addWindow.loadURL(url.format({
-    pathname: path.join(__dirname, "addWindow.html"),
-    protocol: 'file:',
-    slashes: true
-  }));
+  addWindow.loadFile('addWindow.html');
 
-  // Handle garbage collection
-  addWindow.on('closed', function () {
+  addWindow.on('closed', () => {
     addWindow = null;
   });
 }
 
-// Handle add-todo event
 ipcMain.on('add-todo', (event, todo) => {
   console.log('Received todo from renderer process:', todo);
   mainWindow.webContents.send('update-todo-list', todo);
 });
 
-// Menu template
 const mainMenuTemplate = [
   {
-    label: "File",
+    label: 'File',
     submenu: [
       {
-        label: "Add Item",
+        label: 'Add Item',
         click() {
           createAddWindow();
         }
       },
       {
-        label: "Clear Items" // not yet implemented
-      },
-      {
-        label: "Quit",
+        label: 'Quit',
         accelerator: process.platform === 'darwin' ? 'Command+Q' : 'Ctrl+Q',
         click() {
           app.quit();
@@ -90,19 +64,17 @@ const mainMenuTemplate = [
   }
 ];
 
-// Handle macOS
 if (process.platform === 'darwin') {
   mainMenuTemplate.unshift({ role: 'fileMenu' });
 }
 
-// Add devTools if not in production
-if (process.env.NODE_ENV !== "production") {
+if (process.env.NODE_ENV !== 'production') {
   mainMenuTemplate.push({
-    label: "Developer Tools",
+    label: 'Developer Tools',
     submenu: [
-      { role: "reload" },
+      { role: 'reload' },
       {
-        label: "Toggle DevTools",
+        label: 'Toggle DevTools',
         accelerator: process.platform === 'darwin' ? 'Command+I' : 'Ctrl+I',
         click(item, focusedWindow) {
           focusedWindow.toggleDevTools();
@@ -112,7 +84,7 @@ if (process.env.NODE_ENV !== "production") {
   });
 }
 
-app.on('window-all-closed', () => { // quitting the app when no windows are open on non-macOS platforms
+app.on('window-all-closed', () => {
   if (process.platform !== 'darwin') {
     app.quit();
   }

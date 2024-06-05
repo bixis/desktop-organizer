@@ -4,24 +4,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Desktop Organizer</title>
+    <title>To Do App</title>
 </head>
 
 <body>
     <h1 style="text-align: center;">To Do App</h1>
     <ul id="todo-list"></ul>
-
-    <script>
-        window.electron.ipcRenderer.on('update-todo-list', (event, todo) => {
-            console.log('Updating todo list with:', todo); // Debug log
-            const todoList = document.getElementById('todo-list');
-            if (todoList) {
-                const listItem = document.createElement('li');
-                listItem.textContent = todo;
-                todoList.appendChild(listItem);
-            }
-        });
-    </script>
+    <script defer src="renderer.js"></script>
 </body>
 
 </html>

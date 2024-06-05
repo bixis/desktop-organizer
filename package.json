@@ -10,7 +10,9 @@
   "author": "Julian Linares",
   "license": "MIT",
   "dependencies": {
-    "electron": "^30.0.9",
     "npm": "^10.8.1"
+  },
+  "devDependencies": {
+    "electron": "^30.0.9"
   }
 }

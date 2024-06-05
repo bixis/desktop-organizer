@@ -2,28 +2,16 @@
 <html lang="en">
 
 <head>
-    <title>Add to-do item</title>
+    <title>Add To-Do Item</title>
 </head>
 
 <body>
     <form id="todo-form">
-        <label for="todo-input">Enter a to-do item</label>
-        <input type="text" id="todo-input" autofocus required>
+        <label for="todo-input">Enter a to-do item:</label>
+        <input type="text" id="todo-input" required>
         <button type="submit">Add To-Do</button>
     </form>
-
-    <script>
-        document.getElementById('todo-form').addEventListener('submit', (event) => {
-            event.preventDefault();
-            const todoInput = document.getElementById('todo-input');
-            const todo = todoInput.value;
-            console.log('Sending todo:', todo); // Debug log
-            if (todo) {
-                window.api.send('add-todo', todo);
-                todoInput.value = '';
-            }
-        });
-    </script>
+    <script defer src="renderer.js"></script>
 </body>
 
 </html>
